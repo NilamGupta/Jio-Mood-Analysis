@@ -1,0 +1,34 @@
+from tweepy.streaming import StreamListener
+from tweepy import OAuthHandler
+from tweepy import Stream
+import time
+
+access_token = <access token>
+access_token_secret = <access_token_secret>
+consumer_key = <consumer_key>
+consumer_secret = <consumer_secret>
+startSince = '2016-12-01 00:00:00'
+endUntil = '2016-12-02 22:59:00'
+auth = OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
+
+#stream.filter(track=['#Jio','#JIO','#Reliance',"#RELIANCE"])
+class StdOutListener(StreamListener):
+    def on_data(self, data):
+        for tweet in tweepy.Cursor(api.search,q=['#Jio','#JIO','#Reliance',"#RELIANCE"], since=startSince, until=endUntil).items(999999999):
+            try:
+                print(data)
+                saveFile = open("twitterDB1.csv","a")
+                saveFile.write(data)
+                saveFile.write("\n")
+                saveFile.close()
+                return True
+            except BaseException:
+                print("failed ondata,",str(e))
+                time.sleep(5)
+    
+    def on_error(self, status):
+        print(status)
+
+l = StdOutListener()
+stream = Stream(auth, l)
